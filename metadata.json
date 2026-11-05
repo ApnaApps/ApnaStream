@@ -1,0 +1,6 @@
+{
+  "name": "ApnaStream - Universal Video Downloader & Offline Player",
+  "description": "High-resolution video and audio downloader for YouTube, TikTok, Instagram, Facebook, and Pinterest with offline viewing vault and cinema player.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
