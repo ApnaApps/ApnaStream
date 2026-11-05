@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Layers, Download, Check, Sparkles, Loader2, AlertCircle } from 'lucide-react';
 import { downloadManager } from '../utils/downloadEngine';
 import { VideoInfo, VideoFormat } from './FormatSelectorModal';
+import { inspectMediaUrl } from '../utils/platformHelper';
 
 interface BatchDownloadModalProps {
   isOpen: boolean;
@@ -49,9 +50,7 @@ export const BatchDownloadModal: React.FC<BatchDownloadModalProps> = ({
       const url = rawLines[i];
       try {
         setStatusMessage(`Resolving media ${i + 1} of ${rawLines.length}...`);
-        const res = await fetch(`/api/media/info?url=${encodeURIComponent(url)}`);
-        if (!res.ok) continue;
-        const video: VideoInfo = await res.json();
+        const video: VideoInfo = await inspectMediaUrl(url);
 
         // Select matching format
         let targetFormat = video.formats.find(f => {

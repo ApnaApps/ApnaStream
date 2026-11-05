@@ -11,7 +11,7 @@ import { OfflineVault } from './components/OfflineVault';
 import { FormatSelectorModal, VideoInfo, VideoFormat } from './components/FormatSelectorModal';
 import { QueueDrawer } from './components/QueueDrawer';
 import { BatchDownloadModal } from './components/BatchDownloadModal';
-import { PLATFORMS, detectPlatform, SocialPlatform } from './utils/platformHelper';
+import { PLATFORMS, detectPlatform, inspectMediaUrl, SocialPlatform } from './utils/platformHelper';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'downloader' | 'vault'>('downloader');
@@ -110,13 +110,7 @@ export default function App() {
     setIsLoadingInfo(true);
 
     try {
-      const response = await fetch(`/api/media/info?url=${encodeURIComponent(rawUrl)}`);
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || `Failed to fetch video details (${response.status})`);
-      }
-
-      const videoData: VideoInfo = await response.json();
+      const videoData: VideoInfo = await inspectMediaUrl(rawUrl);
       setInspectedVideo(videoData);
       setIsFormatModalOpen(true);
     } catch (err: any) {
