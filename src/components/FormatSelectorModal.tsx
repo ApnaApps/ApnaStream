@@ -20,6 +20,7 @@ export interface VideoFormat {
   isHighRes: boolean;
   badge: string;
   type: 'video' | 'audio';
+  downloadUrl?: string;
 }
 
 export interface VideoInfo {

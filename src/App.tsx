@@ -148,18 +148,7 @@ export default function App() {
       ? inspectedVideo.captions[0].content
       : undefined;
 
-    let targetStream = inspectedVideo.sampleVideoUrl || '/sample-nature.mp4';
-    if (format.type === 'audio') {
-      if (inspectedVideo.id === 'L_LUpnjgPso') targetStream = '/sample-cyberpunk.mp3';
-      else if (inspectedVideo.id === 'jfKfPfyJRdk') targetStream = '/sample-lofi.mp3';
-      else if (inspectedVideo.id === '1La4QzGeaaQ') targetStream = '/sample-space.mp3';
-      else targetStream = '/sample-nature.mp3';
-    } else {
-      if (inspectedVideo.id === 'L_LUpnjgPso') targetStream = '/sample-cyberpunk.mp4';
-      else if (inspectedVideo.id === 'jfKfPfyJRdk') targetStream = '/sample-lofi.mp4';
-      else if (inspectedVideo.id === '1La4QzGeaaQ') targetStream = '/sample-space.mp4';
-      else targetStream = inspectedVideo.sampleVideoUrl || '/sample-nature.mp4';
-    }
+    const targetStream = format.downloadUrl || inspectedVideo.sampleVideoUrl || '/sample-nature.mp4';
 
     const plat = inspectedVideo.platform || detectPlatform(inspectedVideo.url) || 'youtube';
 
@@ -206,18 +195,7 @@ export default function App() {
   const handlePreview = (video: VideoInfo, format: VideoFormat) => {
     setIsFormatModalOpen(false);
 
-    let targetStream = video.sampleVideoUrl || '/sample-nature.mp4';
-    if (format.type === 'audio') {
-      if (video.id === 'L_LUpnjgPso') targetStream = '/sample-cyberpunk.mp3';
-      else if (video.id === 'jfKfPfyJRdk') targetStream = '/sample-lofi.mp3';
-      else if (video.id === '1La4QzGeaaQ') targetStream = '/sample-space.mp3';
-      else targetStream = '/sample-nature.mp3';
-    } else {
-      if (video.id === 'L_LUpnjgPso') targetStream = '/sample-cyberpunk.mp4';
-      else if (video.id === 'jfKfPfyJRdk') targetStream = '/sample-lofi.mp4';
-      else if (video.id === '1La4QzGeaaQ') targetStream = '/sample-space.mp4';
-      else targetStream = '/sample-nature.mp4';
-    }
+    const targetStream = format.downloadUrl || video.sampleVideoUrl || '/sample-nature.mp4';
 
     setPlayingMedia({
       title: video.title,

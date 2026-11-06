@@ -83,7 +83,7 @@ export const PLATFORMS: Record<SocialPlatform, PlatformConfig> = {
     accentClass: 'text-pink-500',
     bgClass: 'bg-pink-500/10',
     borderClass: 'border-pink-500/30',
-    exampleUrl: 'https://www.instagram.com/reel/C8XYZ123456/',
+    exampleUrl: 'https://www.instagram.com/reels/Db8b8L_MQ1-/',
     supportedFormats: ['1080p Ultra Reel', '720p Mobile Video', 'Reel Audio (MP3)', 'Poster HD'],
     icon: ({ className = 'w-4 h-4' }) => (
       <svg className={className} viewBox="0 0 24 24" fill="currentColor">

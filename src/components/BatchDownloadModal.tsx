@@ -23,9 +23,9 @@ export const BatchDownloadModal: React.FC<BatchDownloadModalProps> = ({
   const [statusMessage, setStatusMessage] = useState<string>('');
 
   const sampleUrls = [
+    'https://www.instagram.com/reels/Db8b8L_MQ1-/',
     'https://www.youtube.com/watch?v=LXb3EKWsInQ',
     'https://www.tiktok.com/@natgeo/video/7339482718919283999',
-    'https://www.instagram.com/reel/C8XYZ123456/',
     'https://fb.watch/r8aBcDeFgH/',
     'https://www.pinterest.com/pin/123456789012345678/'
   ];
@@ -54,7 +54,7 @@ export const BatchDownloadModal: React.FC<BatchDownloadModalProps> = ({
 
         // Select matching format
         let targetFormat = video.formats.find(f => {
-          if (selectedPreset === '4K') return f.id.includes('2160') || f.id.includes('hd');
+          if (selectedPreset === '4K') return f.id.includes('2160') || f.id.includes('hd') || f.id.includes('1080');
           if (selectedPreset === 'audio') return f.type === 'audio';
           return f.id.includes('1080') || f.type === 'video';
         }) || video.formats[0];
@@ -71,7 +71,7 @@ export const BatchDownloadModal: React.FC<BatchDownloadModalProps> = ({
           container: targetFormat.container,
           fileType: targetFormat.type,
           totalBytes: targetFormat.approxSizeMb * 1024 * 1024,
-          sampleVideoUrl: video.sampleVideoUrl,
+          sampleVideoUrl: targetFormat.downloadUrl || video.sampleVideoUrl,
           duration: video.duration,
           durationSeconds: video.durationSeconds || 300,
           fps: targetFormat.fps,
