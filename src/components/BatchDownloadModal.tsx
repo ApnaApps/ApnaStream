@@ -123,13 +123,6 @@ export const BatchDownloadModal: React.FC<BatchDownloadModalProps> = ({
             <label className="font-semibold text-zinc-300">
               Media Links (One URL per line):
             </label>
-            <button
-              onClick={handleLoadSampleBatch}
-              className="text-rose-400 hover:text-rose-300 flex items-center gap-1 font-medium"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Load 5 Multi-Platform Samples</span>
-            </button>
           </div>
 
           <textarea

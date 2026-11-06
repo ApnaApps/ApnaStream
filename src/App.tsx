@@ -488,22 +488,9 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* One-click example testing helper */}
+                  {/* Helper tip */}
                   <div className="flex items-center justify-between pt-2 px-1 text-xs text-zinc-500">
                     <span className="text-[11px]">Tip: Paste any public video, reel, post, or pin link to inspect</span>
-                    {selectedPlatformTab !== 'all' && (
-                      <button
-                        onClick={() => {
-                          const example = PLATFORMS[selectedPlatformTab].exampleUrl;
-                          setUrlInput(example);
-                          handleInspectUrl(example);
-                        }}
-                        className="text-rose-400 hover:text-rose-300 font-medium text-[11px] flex items-center gap-1"
-                      >
-                        <span>Test {PLATFORMS[selectedPlatformTab].name} sample</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </button>
-                    )}
                   </div>
 
                   {/* Error Notification */}
@@ -591,17 +578,6 @@ export default function App() {
                           ))}
                         </div>
                       </div>
-
-                      <button
-                        onClick={() => {
-                          setUrlInput(cfg.exampleUrl);
-                          handleInspectUrl(cfg.exampleUrl);
-                        }}
-                        className="mt-4 w-full py-1.5 px-3 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5"
-                      >
-                        <span>Test {cfg.name}</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </button>
                     </div>
                   );
                 })}

@@ -137,119 +137,17 @@ function extractYouTubeId(inputUrl: string): string | null {
 
 export async function inspectMediaUrl(rawUrl: string): Promise<any> {
   const cleanUrl = rawUrl.trim();
-  try {
-    const response = await fetch(`/api/media/info?url=${encodeURIComponent(cleanUrl)}`);
-    const contentType = response.headers.get('content-type') || '';
-    if (response.ok && contentType.includes('application/json')) {
-      return await response.json();
+  const response = await fetch(`/api/media/info?url=${encodeURIComponent(cleanUrl)}`);
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('application/json')) {
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Unable to extract video stream from this URL. Please verify the link is public.');
     }
-  } catch (_) {
-    // Fallback to client-side resolution when deployed on static hosting (Vercel / Render Static Site)
+    return data;
   }
 
-  const platform = detectPlatform(cleanUrl) || 'youtube';
-  const durationSec = platform === 'youtube' ? 240 : 45;
-
-  let title = `${PLATFORMS[platform].name} High-Resolution Media`;
-  let channel = `${PLATFORMS[platform].name} Creator`;
-  let thumbnail = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop';
-  let sampleVideoUrl = '/sample-nature.mp4';
-  const ytId = extractYouTubeId(cleanUrl);
-
-  if (platform === 'youtube' && ytId) {
-    thumbnail = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
-    try {
-      const oembedRes = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`);
-      if (oembedRes.ok) {
-        const data = await oembedRes.json();
-        title = data.title || title;
-        channel = data.author_name || channel;
-        thumbnail = data.thumbnail_url || thumbnail;
-      }
-    } catch (_) {}
-  } else if (platform === 'tiktok') {
-    sampleVideoUrl = '/sample-cyberpunk.mp4';
-    thumbnail = 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop';
-  } else if (platform === 'facebook') {
-    sampleVideoUrl = '/sample-space.mp4';
-    thumbnail = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200&auto=format&fit=crop';
-  } else if (platform === 'pinterest') {
-    sampleVideoUrl = '/sample-lofi.mp4';
-    thumbnail = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1200&auto=format&fit=crop';
-  }
-
-  return {
-    id: ytId || `${platform}_${Date.now()}`,
-    url: cleanUrl,
-    platform,
-    title,
-    channel,
-    thumbnail,
-    views: '840,500',
-    duration: platform === 'youtube' ? '4:00' : '0:45',
-    durationSeconds: durationSec,
-    category: PLATFORMS[platform].name,
-    description: `Extracted high-bitrate ${PLATFORMS[platform].name} stream ready for offline vault storage and device download.`,
-    sampleVideoUrl,
-    captions: [],
-    formats: [
-      {
-        id: '2160p-60',
-        quality: platform === 'tiktok' ? 'TikTok HD (No Watermark)' : '4K / 1080p Ultra HD',
-        resolution: platform === 'youtube' ? '3840x2160' : '1080x1920',
-        fps: 60,
-        container: 'MP4',
-        videoCodec: 'H.264 / AV1 High',
-        audioCodec: 'AAC-LC 320 kbps',
-        bitrate: '18.0 Mbps',
-        approxSizeMb: 24,
-        isHighRes: true,
-        badge: platform === 'tiktok' ? 'HD No Watermark' : 'Ultra HD 60FPS',
-        type: 'video'
-      },
-      {
-        id: '1080p-60',
-        quality: '1080p Full HD',
-        resolution: '1920x1080',
-        fps: 60,
-        container: 'MP4',
-        videoCodec: 'H.264 High',
-        audioCodec: 'AAC-LC 256 kbps',
-        bitrate: '10.0 Mbps',
-        approxSizeMb: 14,
-        isHighRes: true,
-        badge: '1080p Full HD',
-        type: 'video'
-      },
-      {
-        id: '720p',
-        quality: '720p Standard HD',
-        resolution: '1280x720',
-        fps: 30,
-        container: 'MP4',
-        videoCodec: 'H.264',
-        audioCodec: 'AAC-LC 192 kbps',
-        bitrate: '5.0 Mbps',
-        approxSizeMb: 8,
-        isHighRes: false,
-        badge: 'Data Saver',
-        type: 'video'
-      },
-      {
-        id: 'audio-mp3-320',
-        quality: 'MP3 Master Audio (320kbps)',
-        resolution: 'Audio Only',
-        fps: 0,
-        container: 'MP3',
-        videoCodec: 'None',
-        audioCodec: 'MPEG Layer 3 (320 kbps)',
-        bitrate: '320 kbps',
-        approxSizeMb: 4,
-        isHighRes: true,
-        badge: '320 kbps MP3',
-        type: 'audio'
-      }
-    ]
-  };
+  throw new Error('Media extraction service did not return a valid stream response.');
 }
 

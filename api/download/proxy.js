@@ -7,12 +7,30 @@ export default async function handleDownloadProxy(req, res) {
       return res.status(400).send('Missing media url parameter');
     }
 
+    const lowerUrl = mediaUrl.toLowerCase();
     const headers = {
       'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-      Accept: '*/*',
-      Referer: 'https://www.instagram.com/'
+      Accept: '*/*'
     };
+
+    if (lowerUrl.includes('googlevideo.com')) {
+      if (lowerUrl.includes('c=android_vr')) {
+        headers['User-Agent'] =
+          'com.google.android.apps.youtube.vr.oculus/1.60.19 (Linux; U; Android 12L; eureka-user Build/SQ3A.220605.009.A1) gzip';
+      } else if (lowerUrl.includes('c=ios')) {
+        headers['User-Agent'] =
+          'com.google.ios.youtube/19.45.4 (iPhone16,2; U; CPU iOS 17_5_1 like Mac OS X;)';
+      }
+    } else if (lowerUrl.includes('cdninstagram.com')) {
+      headers['Referer'] = 'https://www.instagram.com/';
+    } else if (lowerUrl.includes('tiktok') || lowerUrl.includes('tikwm')) {
+      headers['Referer'] = 'https://www.tiktok.com/';
+    } else if (lowerUrl.includes('pinimg.com')) {
+      headers['Referer'] = 'https://www.pinterest.com/';
+    } else if (lowerUrl.includes('fbcdn.net')) {
+      headers['Referer'] = 'https://www.facebook.com/';
+    }
 
     if (req.headers?.range) {
       headers['Range'] = req.headers.range;
@@ -30,6 +48,7 @@ export default async function handleDownloadProxy(req, res) {
     }
 
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Accept-Ranges', 'bytes');
     const contentType = upstreamRes.headers.get('content-type') || 'video/mp4';
     res.setHeader('Content-Type', contentType);
 
